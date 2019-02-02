@@ -15,9 +15,10 @@ package commands
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseJekyllFilename(t *testing.T) {
@@ -100,6 +101,12 @@ func TestConvertJekyllContent(t *testing.T) {
 		{map[interface{}]interface{}{},
 			"{% highlight go linenos hl_lines=\"1 2\" %}\nvar s string\nvar i int\n{% endhighlight %}",
 			"{{< highlight go \"linenos=table,hl_lines=1 2\" >}}\nvar s string\nvar i int\n{{< / highlight >}}"},
+		{map[interface{}]interface{}{"date": "2015-06-12"},
+			"---\ntitle: \"My Title\"\n---\nBody text goes here.\n",
+			"---\ndate: \"2015-06-12\"\ntitle: \"My Title\"\n---\nBody text goes here.\n"},
+		{map[interface{}]interface{}{"date": "2015-06-12", "layout": "post", "permalink": "/permalink.html"},
+			"---\ntitle: \"My Title\"\n---\nBody text goes here.\n",
+			"---\ndate: \"2015-06-12\"\nlayout: \"post\"\npermalink: \"/permalink.html\"\ntitle: \"My Title\"\n---\nBody text goes here.\n"},
 
 		// Octopress image tag
 		{map[interface{}]interface{}{},

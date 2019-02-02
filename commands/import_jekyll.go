@@ -527,8 +527,22 @@ func convertJekyllContent(m interface{}, content string) string {
 
 	lines := strings.Split(content, "\n")
 	var resultLines []string
+	insertedMetadata := false
 	for _, line := range lines {
-		resultLines = append(resultLines, strings.Trim(line, "\r\n"))
+		cleanLine := strings.Trim(line, "\r\n")
+		resultLines = append(resultLines, cleanLine)
+		if !insertedMetadata && cleanLine == "---" {
+			if metadata["date"] != nil {
+				resultLines = append(resultLines, fmt.Sprintf("date: %q", metadata["date"]))
+			}
+			if metadata["layout"] != nil {
+				resultLines = append(resultLines, fmt.Sprintf("layout: %q", metadata["layout"]))
+			}
+			if metadata["permalink"] != nil {
+				resultLines = append(resultLines, fmt.Sprintf("permalink: %q", metadata["permalink"]))
+			}
+			insertedMetadata = true
+		}
 	}
 
 	content = strings.Join(resultLines, "\n")
